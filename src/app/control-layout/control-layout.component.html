@@ -1,0 +1,58 @@
+<div class="m-3">
+  <div class="form-group row">
+    <label class="h4 col-4 align-self-center">总分</label>
+    <label class="h2 col-8 text-center">{{score}}</label>
+  </div>
+  <div class="form-group row">
+    <label class="col-4 col-form-label">正确个数</label>
+    <input type="number" class="form-control-range col" min="0" max="4" value="0" [(ngModel)]="number">
+  </div>
+  <div class="form-group row">
+    <button class="btn btn-primary col-4" (click)="done()">计分</button>
+    <button class="btn btn-info col-4 offset-4" (click)="showRanking()">{{urlButtonText}}</button>
+  </div>
+  <div class="form-group row">
+    <button class="btn btn-primary col-4" data-toggle="modal" data-target="#commit">提交</button>
+    <button class="btn btn-secondary col-4 offset-4" (click)="newGame()">重新开始</button>
+  </div>
+</div>
+
+<!-- <div id="three" class="mt-3 p-0"></div> -->
+<app-block-layout class="mt-3 p-0" #blockLayout></app-block-layout>
+
+<div class="mt-3">
+  <h2>评分标准</h2>
+  <textarea name="" id="" cols="30" rows="10" style="width: 100%" class="text" disabled>
+  （1）完成一个图案加10分。
+  （2）对于未完成的图案（包括跳过及停止比赛时的图案），根据正确摆放位置的积木个数计分，每个积木加2分。
+  （3）跳过一个图案扣2分。
+  （4）若中途停止比赛，则按当前已完成的图案进行计分。
+  </textarea>
+</div>
+
+<div id="commit" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">保存记录</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group row">
+          <label class="col-3 col-form-label">操作员</label>
+          <input type="text" class="form-control col-9">
+        </div>
+        <div class="form-group row">
+          <label class="col-3 col-form-label">分数</label>
+          <input type="number" class="form-control col-9" [(ngModel)]="score">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">保存</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+      </div>
+    </div>
+  </div>
+</div>
