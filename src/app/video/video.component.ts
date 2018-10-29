@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ConfigService } from '../config.service';
 
 @Component({
   selector: 'app-video',
@@ -8,10 +9,10 @@ import { Component, OnInit } from '@angular/core';
 export class VideoComponent implements OnInit {
 
   private webSocket: WebSocket = null;
-  private serverAddress = 'ws://127.0.0.1:12003/';
+  private serverAddress = 'ws://' + this.configService.serverIp + ':12003/';
   private isFirstReceiveImage = true;
 
-  constructor() { }
+  constructor(private configService: ConfigService) { }
 
   ngOnDestroy() {
     this.closeWebSocket();
@@ -19,12 +20,6 @@ export class VideoComponent implements OnInit {
 
   ngOnInit() {
     this.initWebSocket();
-    // $('#fire-branch-tab').on('shown.bs.tab', () => {
-    //   this.initWebSocket();
-    // });
-    // $('#fire-branch-tab').on('hidden.bs.tab', () => {
-    //   this.closeWebSocket();
-    // });
   }
 
   private closeWebSocket(): void {
@@ -38,17 +33,8 @@ export class VideoComponent implements OnInit {
     if (this.webSocket) {
       return;
     }
-    console.log('event');
-
     this.webSocket = new WebSocket(this.serverAddress);
     this.isFirstReceiveImage = true;
-
-    this.webSocket.onclose = () => {
-      console.log('fire-branch websocket close');
-    };
-    this.webSocket.onopen = () => {
-      console.log('fire-branch websocket open');
-    };
 
     this.webSocket.onmessage = event => {
       // console.log(event);

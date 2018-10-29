@@ -15,6 +15,8 @@ export class BlockLayoutComponent implements OnInit {
   }
 
   public update() {
-    this.blockScene.updateBox();
+    if(this.blockScene){
+      this.blockScene.updateBox();
+    }
   }
 }

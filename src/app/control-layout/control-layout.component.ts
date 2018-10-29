@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-
+import { SocketService } from '../socket.service';
 
 @Component({
   selector: 'app-control-layout',
@@ -13,42 +13,94 @@ export class ControlLayoutComponent implements OnInit {
   blockLayout;
 
   private score = 0;
+  private newScore = 0;
   public number = 0;
+  private operator = '';
+
   private TEXT_RANKING = '排名';
   private TEXT_VIDEO = '视频';
-
   public urlButtonText = this.TEXT_RANKING;
 
-  constructor(private router: Router) { }
+  private MAX_TIME = 15 * 60;
+  private remainTime = this.MAX_TIME;
+  private timeId;
+
+  private TEXT_PAUSE = '暂停';
+  private TEXT_CONTINUE = '继续';
+  public pauseButtonText = this.TEXT_PAUSE;
+
+  private webSocket: WebSocket = null;
+
+  constructor(private router: Router, private socketService: SocketService) {
+    this.webSocket = this.socketService.getRankSocket();
+  }
 
   ngOnInit() {
     this.update();
   }
 
+  public changeScore(value) {
+    this.number = value;
+  }
+
   public update() {
-    // this.blockScene.updateBox();
+    this.number = 0;
     this.blockLayout.update();
   }
 
   public computeScore() {
     if (this.number === 4) {
-      this.score += 10;
+      this.newScore = this.score + 10;
     } else {
-      this.score += this.number * 2;
-      this.score -= 2;
+      this.newScore = this.score + this.number * 2;
+      this.newScore -= 2;
     }
-    this.number = 0;
   }
 
-  public done() {
-    this.computeScore();
+  public newGroup() {
+    this.score = this.newScore;
     this.update();
   }
+
+  // public done() {
+  //   this.computeScore();
+  //   this.update();
+  // }
 
   public newGame() {
-    this.score = 0;
-    this.number = 0;
+    this.reset();
+    this.computeTime();
     this.update();
+  }
+
+  private reset() {
+    this.score = 0;
+    this.newScore = 0;
+    this.number = 0;
+    this.remainTime = this.MAX_TIME;
+    this.pauseButtonText = this.TEXT_PAUSE
+    this.stopComputeTime();
+  }
+
+  private computeTime() {
+    this.timeId = setInterval(() => {
+      this.remainTime -= 1;
+    }, 1000);
+  }
+
+  private stopComputeTime() {
+    clearInterval(this.timeId);
+  }
+
+  public pause() {
+    this.stopComputeTime();
+    if (this.pauseButtonText === this.TEXT_PAUSE) {
+      this.pauseButtonText = this.TEXT_CONTINUE;
+    }
+    else {
+      this.computeTime();
+      this.pauseButtonText = this.TEXT_PAUSE;
+    }
   }
 
   public showRanking() {
@@ -61,4 +113,22 @@ export class ControlLayoutComponent implements OnInit {
     }
   }
 
+  private processBarValue() {
+    return this.remainTime / this.MAX_TIME * 100 + '%';
+  }
+
+  private remainTimeText() {
+    let remainMinute = Math.floor(this.remainTime / 60);
+    let remainSecond = this.remainTime - remainMinute * 60;
+    return remainMinute + ' : ' + remainSecond;
+  }
+
+  public save(value) {
+    if (value.score === null) {
+      alert('分数不能为空');
+    }
+    this.webSocket.send(JSON.stringify({ oper: 'new', value: value }));
+    this.webSocket.send(JSON.stringify({ oper: 'get' }));
+    this.reset();
+  }
 }

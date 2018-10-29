@@ -1,3 +1,21 @@
-<p>
-  ranking works!
-</p>
+<div style="overflow-y: auto;max-height: 800px">
+  <table class="table table-bordered table-striped table-hover text-center">
+    <thead class="thead-dark">
+      <tr>
+        <th>排名</th>
+        <th>操作员</th>
+        <th>分数</th>
+      </tr>
+    </thead>
+    <tbody *ngFor="let user of users">
+      <tr>
+        <th>{{user.id}}</th>
+        <th>{{user.name}}</th>
+        <th>{{user.score}}</th>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div>
+  <button class="btn btn-primary float-right mt-3" (click)="refresh()">刷新</button>
+</div>
