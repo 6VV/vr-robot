@@ -1,6 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { SocketService } from '../socket.service';
+import * as $ from 'jquery';
+import 'bootstrap';
 
 @Component({
   selector: 'app-control-layout',
@@ -78,13 +80,17 @@ export class ControlLayoutComponent implements OnInit {
     this.newScore = 0;
     this.number = 0;
     this.remainTime = this.MAX_TIME;
-    this.pauseButtonText = this.TEXT_PAUSE
+    this.pauseButtonText = this.TEXT_PAUSE;
     this.stopComputeTime();
   }
 
   private computeTime() {
     this.timeId = setInterval(() => {
       this.remainTime -= 1;
+      if (this.remainTime <= 0) {
+        $('#commitDialog').modal('show');
+        this.stopComputeTime();
+      }
     }, 1000);
   }
 
@@ -96,8 +102,7 @@ export class ControlLayoutComponent implements OnInit {
     this.stopComputeTime();
     if (this.pauseButtonText === this.TEXT_PAUSE) {
       this.pauseButtonText = this.TEXT_CONTINUE;
-    }
-    else {
+    } else {
       this.computeTime();
       this.pauseButtonText = this.TEXT_PAUSE;
     }
@@ -118,8 +123,8 @@ export class ControlLayoutComponent implements OnInit {
   }
 
   private remainTimeText() {
-    let remainMinute = Math.floor(this.remainTime / 60);
-    let remainSecond = this.remainTime - remainMinute * 60;
+    const remainMinute = Math.floor(this.remainTime / 60);
+    const remainSecond = this.remainTime - remainMinute * 60;
     return remainMinute + ' : ' + remainSecond;
   }
 
@@ -129,6 +134,7 @@ export class ControlLayoutComponent implements OnInit {
     }
     this.webSocket.send(JSON.stringify({ oper: 'new', value: value }));
     this.webSocket.send(JSON.stringify({ oper: 'get' }));
+    $('#commitDialog').modal('hide');
     this.reset();
   }
 }
