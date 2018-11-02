@@ -23,7 +23,7 @@ export class ControlLayoutComponent implements OnInit {
   private TEXT_VIDEO = '视频';
   public urlButtonText = this.TEXT_RANKING;
 
-  private MAX_TIME = 15 * 60;
+  private MAX_TIME = 5 * 60;
   private remainTime = this.MAX_TIME;
   private timeId;
 
@@ -55,7 +55,6 @@ export class ControlLayoutComponent implements OnInit {
       this.newScore = this.score + 10;
     } else {
       this.newScore = this.score + this.number * 2;
-      this.newScore -= 2;
     }
   }
 
@@ -119,8 +118,13 @@ export class ControlLayoutComponent implements OnInit {
   }
 
   private processBarValue() {
-    return this.remainTime / this.MAX_TIME * 100 + '%';
+    return this.remainTime / this.MAX_TIME;
   }
+
+  private processBarColor() {
+    return this.processBarValue() < 0.4 ? 'bg-danger' : '';
+  }
+
 
   private remainTimeText() {
     const remainMinute = Math.floor(this.remainTime / 60);
