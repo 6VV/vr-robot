@@ -7,5 +7,5 @@ export class ConfigService {
 
   constructor() { }
 
-  public serverIp = 'localhost';
+  public serverIp = '192.168.31.116';
 }

@@ -14,7 +14,7 @@ export class BlockScene {
     this.init();
     this.initListener();
     this.render();
-    this.blockGrid = new BlockGrid(this.scene, 4);
+    this.blockGrid = new BlockGrid(this.scene, 3);
   }
 
   private init(): void {
@@ -56,8 +56,8 @@ export class BlockScene {
       0.1,
       2000
     );
-    this.camera.position.y = -300;
-    this.camera.position.z = 500;
+    this.camera.position.y = -150;
+    this.camera.position.z = 300;
     this.camera.lookAt(0, 0, 0);
   }
 

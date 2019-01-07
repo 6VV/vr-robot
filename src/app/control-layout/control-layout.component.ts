@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { SocketService } from '../socket.service';
 import * as $ from 'jquery';
 import 'bootstrap';
+import { shiftInitState } from '@angular/core/src/view';
 
 @Component({
   selector: 'app-control-layout',
@@ -25,6 +26,7 @@ export class ControlLayoutComponent implements OnInit {
 
   private MAX_TIME = 5 * 60;
   private remainTime = this.MAX_TIME;
+  private useTime = 0;
   private timeId;
 
   private TEXT_PAUSE = '暂停';
@@ -71,7 +73,7 @@ export class ControlLayoutComponent implements OnInit {
   public newGame() {
     this.reset();
     this.computeTime();
-    this.update();
+    // this.update();
   }
 
   private reset() {
@@ -86,6 +88,7 @@ export class ControlLayoutComponent implements OnInit {
   private computeTime() {
     this.timeId = setInterval(() => {
       this.remainTime -= 1;
+      this.useTime = this.MAX_TIME - this.remainTime;
       if (this.remainTime <= 0) {
         $('#commitDialog').modal('show');
         this.stopComputeTime();
@@ -132,10 +135,17 @@ export class ControlLayoutComponent implements OnInit {
     return remainMinute + ' : ' + remainSecond;
   }
 
+
+  public stop() {
+    this.pause();
+    $('#commitDialog').modal('show');
+  }
+
   public save(value) {
-    if (value.score === null) {
-      alert('分数不能为空');
-    }
+    // if (value.score === null) {
+    //   alert('分数不能为空');
+    // }
+    console.log(JSON.stringify(value));
     this.webSocket.send(JSON.stringify({ oper: 'new', value: value }));
     this.webSocket.send(JSON.stringify({ oper: 'get' }));
     $('#commitDialog').modal('hide');

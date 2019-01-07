@@ -13,7 +13,7 @@ export class BlockGrid {
   private createColorObjects(): any[] {
     return [
       { color: new THREE.Color('red'), number: 1 },
-      { color: new THREE.Color('green'), number: 1 },
+      { color: new THREE.Color('orange'), number: 1 },
       { color: new THREE.Color('blue'), number: 1 },
       { color: new THREE.Color('yellow'), number: 1 }
     ];

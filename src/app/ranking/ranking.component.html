@@ -1,17 +1,19 @@
-<div style="overflow-y: auto;max-height: 800px">
+<div style="overflow-y: auto;max-height: 655px;margin-top: 15px">
   <table class="table table-bordered table-striped table-hover text-center">
     <thead class="thead-dark">
       <tr>
-        <th>排名</th>
-        <th>操作员</th>
-        <th>分数</th>
+        <th style="font-size: 1.5em">排名</th>
+        <!-- <th>操作员</th>
+        <th>分数</th> -->
+        <th style="font-size: 1.5em">时间</th>
       </tr>
     </thead>
     <tbody *ngFor="let user of users">
       <tr>
-        <th>{{user.id}}</th>
-        <th>{{user.name}}</th>
-        <th>{{user.score}}</th>
+        <th style="text-align: center;vertical-align: middle;font-size: 2em">{{user.id}}</th>
+        <!-- <th>{{user.name}}</th>
+        <th>{{user.score}}</th> -->
+        <th><span style="color: red;font-size: 2em">{{user.time}}</span><span style="font-size: 1.5em;margin-left: 10px">秒</span></th>
       </tr>
     </tbody>
   </table>

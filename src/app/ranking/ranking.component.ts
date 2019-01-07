@@ -20,28 +20,28 @@ export class RankingComponent implements OnInit {
   }
 
   public refresh(): void {
-    this.webSocket.send(JSON.stringify({ oper: 'get' }))
+    this.webSocket.send(JSON.stringify({ oper: 'get' }));
   }
   private initWebSocket(): void {
     this.webSocket.onopen = () => {
       this.refresh();
-    }
+    };
     this.webSocket.onmessage = event => {
       if (!event.data) {
         return;
       }
       this.users = [];
-      let data = JSON.parse(event.data);
+      const data = JSON.parse(event.data);
 
-      for (let i in data) {
-        this.users.push(new User(data[i]['name'], data[i]['score']));
+      for (let i = 0; i < data.length; ++i) {
+        this.users.push(new User(data[i]['name'], data[i]['score'], data[i]['time']));
       }
 
       this.users = this.users.sort((user1, user2) => {
-        if (user1.score > user2.score) {
-          return -1;
-        } else if (user1.score < user2.score) {
+        if (user1.time > user2.time) {
           return 1;
+        } else if (user1.time < user2.time) {
+          return -1;
         } else {
           return 0;
         }
